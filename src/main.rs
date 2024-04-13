@@ -1,10 +1,15 @@
 use nannou::prelude::*;
-use rust_snake_game::{Direction, SnakeGame};
+use rust_snake_game::{Direction, SnakeGame, Block};
 
-const BLOCK_SIZE: u32 = 30;
-const CLIENT_WIDTH: u32 = BLOCK_SIZE * 20;
-const CLIENT_HEIGHT: u32 = BLOCK_SIZE * 20;
-const FRAMES_PER_MILLISECOND: u64 = 10;
+
+//---------------Constants---------------//
+const BLOCK_SIZE: u32 = 10; // Size of each block in pixels.
+const GRID_SIZE: u32 = 100; // Number of blocks in the grid.
+const CLIENT_WIDTH: u32 = BLOCK_SIZE * GRID_SIZE; // Width of the window.
+const CLIENT_HEIGHT: u32 = BLOCK_SIZE * GRID_SIZE; // Height of the window.
+const FRAMES_COUNT: u64 = 10; // Number of frames to update the snake game.
+//--------------------------------------//
+
 
 fn main() {
     nannou::app(model)
@@ -13,13 +18,13 @@ fn main() {
         .run();
 }
 
+// Model of the application.
 struct Model {
-    _window: window::Id,
     snake_game: SnakeGame,
 }
 
 fn model(app: &App) -> Model {
-    let _window = app.new_window()
+    app.new_window()
         .size(CLIENT_WIDTH, CLIENT_HEIGHT)
         .resizable(false)
         .view(view)
@@ -27,19 +32,20 @@ fn model(app: &App) -> Model {
         .unwrap();
 
     Model {
-        _window ,
-        snake_game: SnakeGame::new(CLIENT_WIDTH, CLIENT_HEIGHT, BLOCK_SIZE).unwrap(),
+        // Initialize the snake game and return the model.
+        snake_game: SnakeGame::build(CLIENT_WIDTH, CLIENT_HEIGHT, BLOCK_SIZE).unwrap(),
     }
 }
 
+// Update the snake game every FRAMES_COUNT frames.
 fn update(app: &App, _model: &mut Model, _update: Update) {
-    if app.elapsed_frames() % FRAMES_PER_MILLISECOND != 0 {
-        return;
-    }
+    if app.elapsed_frames() % FRAMES_COUNT != 0 { return; }
 
-    _model.snake_game.move_snake();
+    // Update the snake game.
+    _model.snake_game.update();
 }
 
+// Handle the KeyPressed event to change the direction of the snake.
 fn event(_app: &App, _model: &mut Model, _event: Event) {
     match _event {
         Event::WindowEvent { simple: Some(event), .. } => {
@@ -62,34 +68,35 @@ fn event(_app: &App, _model: &mut Model, _event: Event) {
 }
 
 fn view(app: &App, _model: &Model, frame: Frame) {
-    if app.elapsed_frames() % FRAMES_PER_MILLISECOND != 0 {
-        return;
-    }
+    if app.elapsed_frames() % FRAMES_COUNT != 0 { return; }
+
+    // Begin drawing.
     let draw = app.draw();
 
+    // Draw the snake blocks.
     for block in &_model.snake_game.snake.body {
-        draw.rect()
-            .stroke(BLACK)
-            .stroke_weight(2.0)
-            .x_y(
-                block.x + block.size / 2.0 - CLIENT_WIDTH as f32 / 2.0,
-                block.y + block.size / 2.0 - CLIENT_HEIGHT as f32 / 2.0,
-            )
-            .w_h(block.size , block.size )
-            .color(block.color);
+        draw_block(&draw, block);
     }
 
-    draw.rect()
-        .stroke(BLACK)
-        .stroke_weight(2.0)
-        .x_y(
-            _model.snake_game.food.x + _model.snake_game.food.size / 2.0 - CLIENT_WIDTH as f32 / 2.0,
-            _model.snake_game.food.y + _model.snake_game.food.size / 2.0 - CLIENT_HEIGHT as f32 / 2.0,
-        )
-        .w_h(_model.snake_game.food.size, _model.snake_game.food.size)
-        .color(_model.snake_game.food.color);
+    // Draw the food block.
+    draw_block(&draw, &_model.snake_game.food.block);
 
+    // Clear the background to white.
     draw.background().color(WHITE);
 
+    // Draw to the frame.
     draw.to_frame(app, &frame).unwrap();
+}
+
+// Helper function to draw a block.
+fn draw_block(draw: &Draw, block: &Block) {
+    draw.rect()
+        // .stroke(BLACK)
+        // .stroke_weight(1.0)
+        .x_y(
+            block.x + block.size / 2.0 - CLIENT_WIDTH as f32 / 2.0,
+            block.y + block.size / 2.0 - CLIENT_HEIGHT as f32 / 2.0,
+        )
+        .w_h(block.size, block.size)
+        .color(block.color);
 }
