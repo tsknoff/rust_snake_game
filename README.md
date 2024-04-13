@@ -1,6 +1,6 @@
 # Rust Snake Game
 
-![alt text](https://github.com/tsknoff/rust_snake_game/blob/main/snake_game.png?raw=true)
+![alt text](https://github.com/tsknoff/rust_snake_game/blob/main/preview.png?raw=true)
 
 This project is a classic "Snake" game implemented in Rust, utilizing the Nannou graphics framework. It demonstrates how to structure and modularize game logic and rendering in Rust, providing a simple yet expandable framework for graphical applications.
 
