@@ -3,11 +3,11 @@ use rust_snake_game::{Direction, SnakeGame, Block};
 
 
 //---------------Constants---------------//
-const BLOCK_SIZE: u32 = 10; // Size of each block in pixels.
-const GRID_SIZE: u32 = 100; // Number of blocks in the grid.
+const BLOCK_SIZE: u32 = 25; // Size of each block in pixels.
+const GRID_SIZE: u32 = 10; // Number of blocks in the grid.
 const CLIENT_WIDTH: u32 = BLOCK_SIZE * GRID_SIZE; // Width of the window.
 const CLIENT_HEIGHT: u32 = BLOCK_SIZE * GRID_SIZE; // Height of the window.
-const FRAMES_COUNT: u64 = 10; // Number of frames to update the snake game.
+const FRAMES_COUNT: u64 = 300; // Number of frames to update the snake game.
 //--------------------------------------//
 
 
@@ -91,8 +91,8 @@ fn view(app: &App, _model: &Model, frame: Frame) {
 // Helper function to draw a block.
 fn draw_block(draw: &Draw, block: &Block) {
     draw.rect()
-        // .stroke(BLACK)
-        // .stroke_weight(1.0)
+        .stroke(BLACK)
+        .stroke_weight(1.0)
         .x_y(
             block.x + block.size / 2.0 - CLIENT_WIDTH as f32 / 2.0,
             block.y + block.size / 2.0 - CLIENT_HEIGHT as f32 / 2.0,
