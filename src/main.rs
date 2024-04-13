@@ -1,5 +1,6 @@
 use nannou::prelude::*;
-use rust_snake_game::{Direction, SnakeGame, Block};
+use rust_snake_game::{Direction, SnakeGame};
+use rust_snake_game::block::Block;
 
 
 //---------------Constants---------------//

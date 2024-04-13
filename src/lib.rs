@@ -1,10 +1,13 @@
 mod snake;
 mod food;
+pub mod block;
 
 use std::cmp::PartialEq;
 use nannou::color::{Rgb};
+
 use snake::Snake;
 use food::Food;
+use block::Block;
 
 pub struct SnakeGame {
     pub block_size: u32,
@@ -41,7 +44,6 @@ impl SnakeGame {
             score: 0,
         })
     }
-
     pub fn set_direction(&mut self, new_direction: Direction) {
 
         if (self.direction == Direction::Up && new_direction == Direction::Down) ||
@@ -52,15 +54,15 @@ impl SnakeGame {
         }
         self.direction = new_direction;
     }
-
     pub fn update(&mut self) {
         let current_head = &self.snake.body.last().unwrap();
-        let mut new_head = Block {
-            x: current_head.x,
-            y: current_head.y,
-            size: self.block_size as f32,
-            color: Rgb::new(0.0, 1.0, 0.0)
-        };
+
+        let mut new_head = Block::new(
+            current_head.x,
+            current_head.y,
+            self.block_size as f32,
+            Rgb::new(0.0, 1.0, 0.0
+        ));
 
         match self.direction {
             Direction::Up => {
@@ -99,7 +101,6 @@ impl SnakeGame {
     fn check_collision_with_border(&self, new_head: &Block) -> bool {
         new_head.x < 0.0 || new_head.x >= self.width as f32 || new_head.y < 0.0 || new_head.y >= self.height as f32
     }
-
     fn check_collision_with_self(&self, new_head: &Block) -> bool {
         for block in &self.snake.body {
             if block.x == new_head.x && block.y == new_head.y {
@@ -133,11 +134,4 @@ impl PartialEq for Direction {
             _ => false,
         }
     }
-}
-
-pub struct Block {
-    pub x: f32,
-    pub y: f32,
-    pub size: f32,
-    pub color: Rgb,
 }
