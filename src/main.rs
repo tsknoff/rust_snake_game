@@ -7,7 +7,7 @@ const BLOCK_SIZE: u32 = 25; // Size of each block in pixels.
 const GRID_SIZE: u32 = 10; // Number of blocks in the grid.
 const CLIENT_WIDTH: u32 = BLOCK_SIZE * GRID_SIZE; // Width of the window.
 const CLIENT_HEIGHT: u32 = BLOCK_SIZE * GRID_SIZE; // Height of the window.
-const FRAMES_COUNT: u64 = 300; // Number of frames to update the snake game.
+const FRAMES_COUNT: u64 = 10; // Number of frames to update the snake game.
 //--------------------------------------//
 
 
@@ -81,6 +81,9 @@ fn view(app: &App, _model: &Model, frame: Frame) {
     // Draw the food block.
     draw_block(&draw, &_model.snake_game.food.block);
 
+    // Draw score.
+    draw_text(&draw, &format!("Score: {}", _model.snake_game.score), 0.0, CLIENT_HEIGHT as f32 / 2.0 - 20.0);
+
     // Clear the background to white.
     draw.background().color(WHITE);
 
@@ -88,7 +91,7 @@ fn view(app: &App, _model: &Model, frame: Frame) {
     draw.to_frame(app, &frame).unwrap();
 }
 
-// Helper function to draw a block.
+// Helper functions to ui blocks and text.
 fn draw_block(draw: &Draw, block: &Block) {
     draw.rect()
         .stroke(BLACK)
@@ -99,4 +102,11 @@ fn draw_block(draw: &Draw, block: &Block) {
         )
         .w_h(block.size, block.size)
         .color(block.color);
+}
+
+fn draw_text(draw: &Draw, text: &str, x: f32, y: f32) {
+    draw.text(text)
+        .x_y(x, y)
+        .font_size(20)
+        .color(BLACK);
 }

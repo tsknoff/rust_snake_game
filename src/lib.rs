@@ -13,6 +13,7 @@ pub struct SnakeGame {
     pub width: u32,
     pub height: u32,
     pub food: Food,
+    pub score: u32,
 }
 
 impl SnakeGame {
@@ -37,6 +38,7 @@ impl SnakeGame {
             width,
             height,
             food: new_food,
+            score: 0,
         })
     }
 
@@ -82,6 +84,7 @@ impl SnakeGame {
         }
 
         if self.check_collision_with_food(&new_head) {
+            self.score += 1;
             self.food = Food::new(self.width, self.height, self.block_size);
         } else {
             self.snake.body.remove(0);
@@ -109,6 +112,7 @@ impl SnakeGame {
         self.snake = Snake::new(self.block_size as f32);
         self.direction = Direction::Right;
         self.food = Food::new(self.width, self.height, self.block_size);
+        self.score = 0;
     }
 }
 
